@@ -1,2 +1,3 @@
-# Simple Docker by using Docker Composer with 3 saparate container: PHP, MYSQL and APACHE
+# basic docker setup
+A simple docker setup by using Docker Composer with 3 saparate container: PHP, MYSQL and APACHE 
 
