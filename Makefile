@@ -15,6 +15,7 @@ init:
 	echo 'TIMEZONE=Europe/Paris' >> .env
 	echo 'UID=#UID \nGID=#GID' >> .env
 	echo 'COMPOSE_FILE=docker/docker-compose.yml:docker/local/docker-compose.yml' >> .env
+	@if [ ! -f docker/local/docker-compose.yml ]; then echo "version: '3.0'" > docker/local/docker-compose.yml; fi
 
 docker-start:
 	$(generate-env)
