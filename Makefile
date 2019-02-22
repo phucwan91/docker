@@ -1,27 +1,37 @@
-make initialize:
-	test -f ../Makefile || echo '' > ../Makefile && \
-	sed -i -e '1i-include docker/Makefile \' ../Makefile
-	sed -i -e '2i################################\' ../Makefile
+.PHONY: docker-start docker-stop docker-restart docker-inside-php docker-inside-nginx docker-inside-node docker-inside-db \
 
-	cp docker-compose.yml.dist ../docker-compose.yml
+UID = $(shell id -u)
+GID = $(shell id -g)
 
-	test -f ../.gitignore || echo '' > ../.gitignore && \
-	echo '/docker/*' >> ../.gitignore
-	echo 'docker-compose.yml' >> ../.gitignore
+define generate-env
+	if [ -f .env ]; then \
+		sed -i 's,UID.*,UID=$(UID),g;s,GID.*,GID=$(GID),g;' .env; \
+	fi
+endef
 
-make docker-build:
-	docker-compose build --no-cache
+# Only run one time
+init:
+	echo '\n# *** Used for docker ***' >> .env
+	echo 'TIMEZONE=Europe/Paris' >> .env
+	echo 'UID=#UID \nGID=#GID' >> .env
+	echo 'COMPOSE_FILE=docker/docker-compose.yml:docker/local/docker-compose.yml' >> .env
 
-docker-up:
-	docker-compose up -d --build; \
-	docker-compose ps
+docker-start:
+	$(generate-env)
+	docker-compose up --build -d
 
 docker-stop:
 	docker-compose stop
 
-ssh-php:
-	docker exec -it php7.1  sh -c "cd /usr/local/apache2/htdocs/shoppy && /bin/sh"
+docker-restart:
+	$(MAKE) docker-stop
+	$(MAKE) docker-start
 
-ssh-apache:
-	docker exec -it apache2.4 /bin/sh
+docker-inside-php:
+	docker-compose exec --user www-data php /bin/sh
 
+docker-inside-apache:
+	docker-compose exec --user root apache /bin/sh
+
+docker-inside-mysql:
+	docker-compose exec mysql /bin/sh

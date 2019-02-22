@@ -1,0 +1,42 @@
+version: '3.0'
+
+services:
+  apache:
+    build:
+      context: ./apache
+      args:
+          UID: ${UID}
+          GID: ${GID}
+    ports:
+         - "80:80"
+    volumes:
+      - ../:/var/www/html/site
+      - ./logs/apache:/usr/local/apache2/logs/
+
+  mysql:
+    build: ./mysql
+    volumes:
+      - /var/lib/mysql
+    ports:
+      - '3306:3306'
+    env_file:
+      - ./.env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE:      ${MYSQL_DATABASE}
+      MYSQL_USER:          ${MYSQL_USER}
+      MYSQL_PASSWORD:      ${MYSQL_PASSWORD}
+
+  php:
+    build:
+      context: ./php
+      args:
+        TIMEZONE: ${TIMEZONE}
+        UID:      ${UID}
+        GID:      ${GID}
+    volumes:
+      - ../:/var/www/html/site
+    working_dir: /var/www/html/site
+    depends_on:
+      - apache
+      - mysql
