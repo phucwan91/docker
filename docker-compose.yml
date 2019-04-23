@@ -3,28 +3,31 @@ version: '3.0'
 services:
   apache:
     build:
-      context: ./apache
+      context: ./docker/apache
       args:
           UID: ${UID}
           GID: ${GID}
     ports:
-         - "80:80"
+         - '80:80'
     volumes:
       - ../:/var/www/html/site
-      - ./logs/apache:/usr/local/apache2/logs/
+      - ./docker/logs/apache:/usr/local/apache2/logs/
 
   mysql:
-    build: ./mysql
+    build: ./docker/mysql
     volumes:
       - /var/lib/mysql
     ports:
       - '3306:3306'
-    env_file:
-      - ./.env
+    environment:
+      MYSQL_DATABASE:      mydb
+      MYSQL_USER:          user
+      MYSQL_PASSWORD:      userpass
+      MYSQL_ROOT_PASSWORD: root
 
   php:
     build:
-      context: ./php
+      context: ./docker/php
       args:
         TIMEZONE: ${TIMEZONE}
         UID:      ${UID}
@@ -32,6 +35,3 @@ services:
     volumes:
       - ../:/var/www/html/site
     working_dir: /var/www/html/site
-    depends_on:
-      - apache
-      - mysql
