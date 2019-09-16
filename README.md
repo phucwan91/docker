@@ -7,11 +7,14 @@ A simple docker setup by using Docker Composer with 3 saparate container: PHP, M
 
 3. Create a `Makefile` file at you root directory then copy the folowing lines to the `Makefile` file
 
-```
-INFRA_DIR = infra
+    ```
+    INFRA_DIR = infra
+    
+    include $(INFRA_DIR)/docker/Makefile
+    ```
 
-include $(INFRA_DIR)/docker/Makefile
-```
-4. Run `make init` only one time
+4. Update `PUBLIC_DIRECTORY` variable in the file `/docker/apache/httpd-vhosts.conf` to your public directory
+
+5. Run `make init` only one time
 
 
