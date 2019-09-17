@@ -2,7 +2,6 @@ version: '3.0'
 
 services:
     apache:
-        container_name: apache
         build:
             context: ./docker/apache
             args:
@@ -12,10 +11,9 @@ services:
             - '80:80'
         volumes:
             - ../:/var/www/html/site
-            - ./docker/logs/apache:/usr/local/apache2/logs/
+            - ./logs/apache:/usr/local/apache2/logs/
 
     mysql:
-        container_name: mysql
         build: ./docker/mysql
         volumes:
             - /var/lib/mysql
@@ -27,7 +25,6 @@ services:
             MYSQL_ROOT_PASSWORD: root
 
     php:
-        container_name: php
         build:
             context: ./docker/php
             args:
