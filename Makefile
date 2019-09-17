@@ -37,10 +37,10 @@ docker-restart:
 	$(MAKE) docker-start
 
 docker-inside-php:
-	docker-compose exec --user www-data php /bin/sh
+	docker exec -it --user www-data php /bin/sh
 
 docker-inside-apache:
-	docker-compose exec --user root apache /bin/sh
+	docker exec -it --user root apache /bin/sh
 
 docker-inside-mysql:
-	docker-compose exec mysql /bin/sh
+	docker exec -it mysql /bin/sh
