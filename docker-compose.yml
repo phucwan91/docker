@@ -1,36 +1,39 @@
 version: '3.0'
 
 services:
-  apache:
-    build:
-      context: ./docker/apache
-      args:
-          UID: ${UID}
-          GID: ${GID}
-    ports:
-         - '80:80'
-    volumes:
-      - ../:/var/www/html/site
-      - ./docker/logs/apache:/usr/local/apache2/logs/
+    apache:
+        container_name: apache
+        build:
+            context: ./docker/apache
+            args:
+                UID: ${UID}
+                GID: ${GID}
+        ports:
+            - '80:80'
+        volumes:
+            - ../:/var/www/html/site
+            - ./docker/logs/apache:/usr/local/apache2/logs/
 
-  mysql:
-    build: ./docker/mysql
-    volumes:
-      - /var/lib/mysql
-    ports:
-      - '3306:3306'
-    environment:
-      MYSQL_USER:          user
-      MYSQL_PASSWORD:      userpass
-      MYSQL_ROOT_PASSWORD: root
+    mysql:
+        container_name: mysql
+        build: ./docker/mysql
+        volumes:
+            - /var/lib/mysql
+        ports:
+            - '3306:3306'
+        environment:
+            MYSQL_USER:          user
+            MYSQL_PASSWORD:      userpass
+            MYSQL_ROOT_PASSWORD: root
 
-  php:
-    build:
-      context: ./docker/php
-      args:
-        TIMEZONE: ${TIMEZONE}
-        UID:      ${UID}
-        GID:      ${GID}
-    volumes:
-      - ../:/var/www/html/site
-    working_dir: /var/www/html/site
+    php:
+        container_name: php
+        build:
+            context: ./docker/php
+            args:
+                TIMEZONE: ${TIMEZONE}
+                UID:      ${UID}
+                GID:      ${GID}
+        volumes:
+            - ../:/var/www/html/site
+        working_dir: /var/www/html/site
