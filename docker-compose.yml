@@ -10,8 +10,9 @@ services:
         ports:
             - '80:80'
         volumes:
-            - ../:/var/www/html/site
+            - ../:${PROJECT_DIR}
             - ./logs/apache:/usr/local/apache2/logs/
+        working_dir: ${PROJECT_DIR}
 
     mysql:
         build: ./docker/mysql
@@ -32,5 +33,5 @@ services:
                 UID:      ${UID}
                 GID:      ${GID}
         volumes:
-            - ../:/var/www/html/site
-        working_dir: /var/www/html/site
+            - ../:${PROJECT_DIR}
+        working_dir: ${PROJECT_DIR}

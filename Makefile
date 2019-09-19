@@ -15,8 +15,10 @@ init:
 	echo '\n# *** Used for docker ***' >> .env
 	echo 'TIMEZONE=Europe/Paris' >> .env
 	echo 'UID=#UID \nGID=#GID' >> .env
+	echo 'PROJECT_DIR=$(PROJECT_DIR)' >> .env
 	echo 'COMPOSE_FILE=$(INFRA_DIR)/docker-compose.yml:$(INFRA_DIR)/docker/docker-compose.yml' >> .env
 	@if [ ! -f $(INFRA_DIR)/docker-compose.yml ]; then echo "version: '3.0'" > $(INFRA_DIR)/docker-compose.yml; fi
+	$(generate-env)
 
 docker-clean:
 	docker-compose down --rmi all
@@ -32,15 +34,11 @@ docker-start:
 docker-stop:
 	docker-compose stop
 
-docker-restart:
-	$(MAKE) docker-stop
-	$(MAKE) docker-start
-
 docker-inside-php:
-	docker exec -it --user www-data php /bin/sh
+	docker-compose exec --user www-data php /bin/sh
 
 docker-inside-apache:
-	docker exec -it --user root apache /bin/sh
+	docker-compose exec --user root apache /bin/sh
 
 docker-inside-mysql:
-	docker exec -it mysql /bin/sh
+	docker-compose exec --user www-data mysql /bin/sh
