@@ -9,6 +9,7 @@ services:
                 GID: ${GID}
         ports:
             - '80:80'
+            - '1510:1510'
         volumes:
             - ../:${PROJECT_DIR}
             - ./docker/logs/apache:/usr/local/apache2/logs/
