@@ -4,19 +4,20 @@ services:
     apache:
         container_name: apache
         build:
-            context: ./docker/apache
+            context: ./apache
             args:
                 UID: ${UID}
                 GID: ${GID}
         ports:
             - '80:80'
+            - '1510:1510'
         volumes:
-            - ../:/var/www/html/site
-            - ./docker/logs/apache:/usr/local/apache2/logs/
+            - /var/www/html:/var/www/html
+            - ./logs/apache:/usr/local/apache2/logs/
 
     mysql:
         container_name: mysql
-        build: ./docker/mysql
+        build: ./mysql
         volumes:
             - /var/lib/mysql
         ports:
@@ -29,11 +30,11 @@ services:
     php:
         container_name: php
         build:
-            context: ./docker/php
+            context: ./php
             args:
                 TIMEZONE: ${TIMEZONE}
                 UID:      ${UID}
                 GID:      ${GID}
         volumes:
-            - ../:/var/www/html/site
-        working_dir: /var/www/html/site
+            - /var/www/html:/var/www/html
+        working_dir: /var/www/html
