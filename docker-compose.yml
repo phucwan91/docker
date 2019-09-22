@@ -19,7 +19,7 @@ services:
         container_name: mysql
         build: ./mysql
         volumes:
-            - /var/lib/mysql
+            - ./mysql/.data/:/var/lib/mysql
         ports:
             - '3306:3306'
         environment:
