@@ -4,6 +4,11 @@
 UID = $(shell id -u)
 GID = $(shell id -g)
 
+INFRA_DIR    = infra
+PROJECT_DIR  = /var/www/html/site
+PROJECT_NAME = simple_docker
+
+
 define generate-env
 	if [ -f .env ]; then \
 		sed -i 's,UID.*,UID=$(UID),g;s,GID.*,GID=$(GID),g;' .env; \
@@ -16,6 +21,7 @@ init:
 	echo 'TIMEZONE=Europe/Paris' >> .env
 	echo 'UID=#UID \nGID=#GID' >> .env
 	echo 'PROJECT_DIR=$(PROJECT_DIR)' >> .env
+	echo 'COMPOSE_PROJECT_NAME=$(PROJECT_NAME)' >> .env
 	echo 'COMPOSE_FILE=$(INFRA_DIR)/docker-compose.yml:$(INFRA_DIR)/docker/docker-compose.yml' >> .env
 	@if [ ! -f $(INFRA_DIR)/docker-compose.yml ]; then echo "version: '3.0'" > $(INFRA_DIR)/docker-compose.yml; fi
 	$(generate-env)
