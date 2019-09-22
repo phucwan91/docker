@@ -11,13 +11,13 @@ services:
             - '80:80'
         volumes:
             - ../:${PROJECT_DIR}
-            - ./logs/apache:/usr/local/apache2/logs/
+            - ./docker/logs/apache:/usr/local/apache2/logs/
         working_dir: ${PROJECT_DIR}
 
     mysql:
         build: ./docker/mysql
         volumes:
-            - /var/lib/mysql
+            - ./docker/mysql/.data/:/var/lib/mysql
         ports:
             - '3306:3306'
         environment:
