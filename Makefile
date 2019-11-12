@@ -4,9 +4,9 @@
 UID = $(shell id -u)
 GID = $(shell id -g)
 
-INFRA_DIR    = infra
-PROJECT_DIR  = /var/www/html/site
-PROJECT_NAME = simple_docker
+PROJECT_DIR  = /var/www/html
+PROJECT_NAME = tree
+INFRA_DIR := $(or $(INFRA_DIR), '.')
 
 
 define generate-env
@@ -18,12 +18,12 @@ endef
 # Only run one time
 init:
 	echo '\n# *** Used for docker ***' >> .env
-	echo 'TIMEZONE=Europe/Paris' >> .env
+	echo 'TIMEZONE=Asia/Ho_Chi_Minh' >> .env
 	echo 'UID=#UID \nGID=#GID' >> .env
 	echo 'PROJECT_DIR=$(PROJECT_DIR)' >> .env
 	echo 'COMPOSE_PROJECT_NAME=$(PROJECT_NAME)' >> .env
-	echo 'COMPOSE_FILE=$(INFRA_DIR)/docker-compose.yml:$(INFRA_DIR)/docker/docker-compose.yml' >> .env
-	@if [ ! -f $(INFRA_DIR)/docker-compose.yml ]; then echo "version: '3.0'" > $(INFRA_DIR)/docker-compose.yml; fi
+	echo 'COMPOSE_FILE=$(INFRA_DIR)/docker-compose.yml:$(INFRA_DIR)/docker-compose.local.yml' >> .env
+	@if [ ! -f $(INFRA_DIR)/docker-compose.local.yml ]; then echo "version: '3.0'" > $(INFRA_DIR)/docker-compose.local.yml; fi
 	$(generate-env)
 
 docker-clean:
@@ -43,8 +43,3 @@ docker-stop:
 docker-inside-php:
 	docker-compose exec --user www-data php /bin/sh
 
-docker-inside-apache:
-	docker-compose exec --user root apache /bin/sh
-
-docker-inside-mysql:
-	docker-compose exec --user www-data mysql /bin/sh

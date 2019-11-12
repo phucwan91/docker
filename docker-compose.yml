@@ -1,34 +1,10 @@
 version: '3.0'
 
 services:
-    apache:
-        build:
-            context: ./docker/apache
-            args:
-                UID: ${UID}
-                GID: ${GID}
-        ports:
-            - '80:80'
-            - '1510:1510'
-        volumes:
-            - ../:${PROJECT_DIR}
-            - ./docker/logs/apache:/usr/local/apache2/logs/
-        working_dir: ${PROJECT_DIR}
-
-    mysql:
-        build: ./docker/mysql
-        volumes:
-            - ./docker/mysql/.data/:/var/lib/mysql
-        ports:
-            - '3306:3306'
-        environment:
-            MYSQL_USER:          user
-            MYSQL_PASSWORD:      userpass
-            MYSQL_ROOT_PASSWORD: root
-
     php:
+        container_name: tree_php
         build:
-            context: ./docker/php
+            context: ./php
             args:
                 TIMEZONE: ${TIMEZONE}
                 UID:      ${UID}
@@ -36,3 +12,5 @@ services:
         volumes:
             - ../:${PROJECT_DIR}
         working_dir: ${PROJECT_DIR}
+        extra_hosts:
+            - 'dockerhost:112.213.91.169'

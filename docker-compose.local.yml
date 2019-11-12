@@ -1,0 +1,19 @@
+version: '3.0'
+
+services:
+  node:
+    build:
+      context: ./node
+    volumes:
+      - ../:${PROJECT_DIR}
+    working_dir: ${PROJECT_DIR}
+    command: ["tail", "-f", "/dev/null"]
+
+#  maildev:
+#    image: djfarrelly/maildev
+#    logging:
+#      options:
+#        max-size: "10m"
+#        max-file: "3"
+#    ports:
+#      - 1080:80

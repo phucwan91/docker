@@ -3,4 +3,4 @@
 /apache/vhost/*
 !apache/vhost/httpd-vhosts.conf
 /mysql/.data/
-
+.env
