@@ -1,5 +1,5 @@
 .PHONY: docker-clean docker- docker-rebuild docker-start docker-stop docker-restart \
- docker-inside-php docker-inside-nginx docker-inside-node docker-inside-db \
+ docker-exec-php docker-exec-nginx docker-exec-node docker-exec-db \
 
 UID = $(shell id -u)
 GID = $(shell id -g)
@@ -40,11 +40,11 @@ docker-start:
 docker-stop:
 	docker-compose stop
 
-docker-inside-php:
+docker-exec-php:
 	docker-compose exec --user www-data php /bin/sh
 
-docker-inside-apache:
+docker-exec-apache:
 	docker-compose exec --user root apache /bin/sh
 
-docker-inside-mysql:
+docker-exec-mysql:
 	docker-compose exec --user www-data mysql /bin/sh
