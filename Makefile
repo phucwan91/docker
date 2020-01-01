@@ -11,7 +11,7 @@ PROJECT_NAME = simple_docker
 
 define generate-env
 	if [ -f .env ]; then \
-		sed -i 's,UID.*,UID=$(UID),g;s,GID.*,GID=$(GID),g;' .env; \
+		sed -i'' -e 's,UID.*,UID=$(UID),g;s,GID.*,GID=$(GID),g;' .env; \
 	fi
 endef
 

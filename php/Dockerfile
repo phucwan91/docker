@@ -2,7 +2,6 @@ FROM php:7.3-fpm-alpine
 
 ARG TIMEZONE
 ARG UID=1000
-ARG GID=1000
 
 COPY php.ini /usr/local/etc/php/
 COPY www.conf /usr/local/etc/php-fpm.d/www.conf
@@ -20,5 +19,4 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && apk --no-cache add shadow \
     && docker-php-ext-install pdo pdo_mysql mysqli zip\
     && usermod -u $UID www-data \
-    && groupmod -g $GID www-data \
     && chgrp -R www-data /usr/local/etc/php-fpm.d/www.conf

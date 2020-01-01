@@ -6,7 +6,6 @@ services:
             context: ./docker/apache
             args:
                 UID: ${UID}
-                GID: ${GID}
         ports:
             - '80:80'
             - '1510:1510'
@@ -32,7 +31,6 @@ services:
             args:
                 TIMEZONE: ${TIMEZONE}
                 UID:      ${UID}
-                GID:      ${GID}
         volumes:
             - ../:${PROJECT_DIR}
         working_dir: ${PROJECT_DIR}
