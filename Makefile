@@ -1,13 +1,12 @@
-.PHONY: docker-clean docker- docker-rebuild docker-start docker-stop docker-restart \
- docker-exec-php docker-exec-nginx docker-exec-node docker-exec-db \
+.PHONY: init docker-clean docker-rebuild docker-start docker-stop \
+docker-exec-php docker-exec-mysql docker-exec-apache \
 
 UID = $(shell id -u)
 GID = $(shell id -g)
 
-INFRA_DIR    = infra
-PROJECT_DIR  = /var/www/html/site
-PROJECT_NAME = simple_docker
+ENV ?= dev
 
+PROJECT_DIR = /var/www/html/site
 
 define generate-env
 	if [ -f .env ]; then \
@@ -15,15 +14,20 @@ define generate-env
 	fi
 endef
 
-# Only run one time
+define run-in-container
+	@if [ ! -z $$(docker-compose ps -q $(2) 2>/dev/null) ]; then \
+		docker-compose exec --user $(1) $(2) /bin/sh -c "cd $(PROJECT_DIR) && $(3)"; \
+	else \
+		$(3); \
+	fi
+endef
+
+# Used for init the .env file if it's not existed
 init:
 	echo '\n# *** Used for docker ***' >> .env
 	echo 'TIMEZONE=Europe/Paris' >> .env
 	echo 'UID=#UID \nGID=#GID' >> .env
 	echo 'PROJECT_DIR=$(PROJECT_DIR)' >> .env
-	echo 'COMPOSE_PROJECT_NAME=$(PROJECT_NAME)' >> .env
-	echo 'COMPOSE_FILE=$(INFRA_DIR)/docker-compose.yml:$(INFRA_DIR)/docker/docker-compose.yml' >> .env
-	@if [ ! -f $(INFRA_DIR)/docker-compose.yml ]; then echo "version: '3.0'" > $(INFRA_DIR)/docker-compose.yml; fi
 	$(generate-env)
 
 docker-clean:
@@ -48,3 +52,11 @@ docker-exec-apache:
 
 docker-exec-mysql:
 	docker-compose exec --user www-data mysql /bin/sh
+
+docker-import-db:
+	docker exec -i docker_mysql_1 mysql -uroot -proot $(DB) < db/$(SQL)
+
+site-install-back:
+	$(call run-in-container,www-data,php,php -d memory_limit=-1 /usr/local/bin/composer install)
+
+

@@ -3,19 +3,18 @@ version: '3.0'
 services:
     apache:
         build:
-            context: ./docker/apache
+            context: ./apache
             args:
                 UID: ${UID}
         ports:
             - '80:80'
-            - '1510:1510'
         volumes:
-            - ../:${PROJECT_DIR}:delegated
-            - ./docker/logs/apache:/usr/local/apache2/logs/:delegated
+            - ./site/:${PROJECT_DIR}:delegated
+            - ./logs/apache:/usr/local/apache2/logs/:delegated
         working_dir: ${PROJECT_DIR}
 
     mysql:
-        build: ./docker/mysql
+        build: ./mysql
         volumes:
             - db_data:/var/lib/mysql:delegated
         ports:
@@ -27,12 +26,12 @@ services:
 
     php:
         build:
-            context: ./docker/php
+            context: ./php
             args:
                 TIMEZONE: ${TIMEZONE}
                 UID:      ${UID}
         volumes:
-            - ../:${PROJECT_DIR}:delegated
+            - ./site:${PROJECT_DIR}:delegated
         working_dir: ${PROJECT_DIR}
 
 volumes:

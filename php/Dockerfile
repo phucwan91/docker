@@ -1,4 +1,4 @@
-FROM php:7.3-fpm-alpine
+FROM php:7.4-fpm-alpine
 
 ARG TIMEZONE
 ARG UID=1000
@@ -16,7 +16,8 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && apk update \
     && apk add git \
     && apk add libzip-dev \
+    && apk add libpng-dev \
     && apk --no-cache add shadow \
-    && docker-php-ext-install pdo pdo_mysql mysqli zip\
+    && docker-php-ext-install pdo pdo_mysql mysqli zip gd\
     && usermod -u $UID www-data \
     && chgrp -R www-data /usr/local/etc/php-fpm.d/www.conf
